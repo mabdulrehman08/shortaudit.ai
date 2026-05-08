@@ -1,0 +1,16 @@
+{
+  "name": "shortaudit-ai",
+  "private": true,
+  "version": "0.1.0",
+  "description": "AI content distribution analyst for short-form creators.",
+  "scripts": {
+    "dev": "npm run dev --workspace backend & npm run dev --workspace frontend",
+    "build": "npm run build --workspace frontend",
+    "start": "npm run start --workspace backend",
+    "lint": "npm run lint --workspace frontend && npm run lint --workspace backend"
+  },
+  "workspaces": [
+    "frontend",
+    "backend"
+  ]
+}

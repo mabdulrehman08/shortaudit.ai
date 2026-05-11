@@ -77,25 +77,13 @@ export async function analyzeVideo(input) {
 
   const prompt = `Act as an elite short-form content strategist and algorithm analyst. Analyze this short-form video concept for distribution risk and growth potential. Be direct, premium, and useful for a serious creator.
 
-Video URL: ${input.videoUrl || 'Not provided'}
-Video title: ${input.title || 'Not provided'}
-Description/context: ${input.description || 'Not provided'}
-Niche: ${input.niche || 'Not provided'}
-Target audience: ${input.targetAudience || 'Not provided'}
-Original hook: ${input.originalHook || 'Not provided'}
-Transcript/captions: ${input.transcript || 'Not provided'}
-Hashtags: ${input.hashtags || 'Not provided'}
-Posting time: ${input.postingTime || 'Not provided'}
-Video length: ${input.videoLength || 'Not provided'}
-Current metrics: views=${input.views || 'unknown'}, likes=${input.likes || 'unknown'}, comments=${input.comments || 'unknown'}, shares=${input.shares || 'unknown'}, saves=${input.saves || 'unknown'}, avgWatchTime=${input.avgWatchTime || 'unknown'}, retentionPercent=${input.retentionPercent || 'unknown'}
-Thumbnail/cover/first-frame notes: ${input.thumbnailNotes || 'Not provided'}
-Competitor/reference links: ${input.competitorLinks || 'Not provided'}
-Past winners and creator patterns: ${input.pastWinners || 'Not provided'}
+Video title: ${input.title}
+Description/transcript/context: ${input.description}
 Platform: ${input.platform}
 Upload method: ${input.uploadMethod}
 CTA intensity: ${input.ctaIntensity}
 
-Analyze the supplied URL as creator-provided context only; do not claim direct access to private analytics or scraped transcript unless present in the text. Use all extra creator-provided data, including metrics, references, past winners, thumbnail notes, and viral picture/cover ideas, to identify the strongest distribution fixes. Analyze hook quality, retention risk, CTA problems, AI-generated appearance, platform risks, repetitive formatting, algorithmic weaknesses, shadowban-like suppression patterns, and manual vs API upload considerations. Return calibrated scores, not hype.`
+Analyze hook quality, retention risk, CTA problems, AI-generated appearance, platform risks, repetitive formatting, algorithmic weaknesses, shadowban-like suppression patterns, and manual vs API upload considerations. Return calibrated scores, not hype.`
 
   const response = await client.responses.create({
     model,

@@ -1,30 +1,12 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { AlertTriangle, BarChart3, Bot, Database, Download, FileVideo, Gauge, Layers, Link2, Loader2, Trash2, UploadCloud, Wand2, Zap } from 'lucide-react'
+import { AlertTriangle, BarChart3, Bot, FileVideo, Gauge, Layers, Loader2, UploadCloud, Wand2, Zap } from 'lucide-react'
 import { analyzeVideo } from '../lib/api.js'
 import { Card, FieldLabel, Pill, ScoreBar } from './ui.jsx'
 
 const initialForm = {
   title: 'How I made $5000 using AI in 30 days',
   description: 'A fast-paced AI side hustle short with screen recordings, captions, and a CTA in the first 3 seconds asking viewers to follow for the full workflow.',
-  videoUrl: 'https://www.youtube.com/shorts/example',
-  niche: 'AI side hustles',
-  targetAudience: 'Gen-Z creators who want extra income',
-  originalHook: 'I tried making money with AI for 30 days',
-  transcript: 'Day 1 I tested five AI tools. By day 7 one workflow started getting clients. Here is the exact system.',
-  hashtags: '#ai #sidehustle #youtubeshorts',
-  postingTime: 'Weekday evening',
-  videoLength: '34 seconds',
-  views: '5200',
-  likes: '318',
-  comments: '42',
-  shares: '19',
-  saves: '71',
-  avgWatchTime: '21 seconds',
-  retentionPercent: '62',
-  thumbnailNotes: 'Black background, white caption, AI dashboard screenshot',
-  competitorLinks: 'https://www.youtube.com/shorts/competitor-example',
-  pastWinners: 'Videos with personal proof screenshots and slower first 2 seconds performed best.',
   platform: 'YouTube Shorts',
   uploadMethod: 'API Upload',
   ctaIntensity: 'Aggressive',
@@ -49,56 +31,8 @@ export default function Dashboard() {
   const [form, setForm] = useState(initialForm)
   const [analysis, setAnalysis] = useState(defaultAnalysis)
   const [history, setHistory] = useState([defaultAnalysis])
-  const [savedAudits, setSavedAudits] = useState([])
-  const [backupMessage, setBackupMessage] = useState('Local backup is ready in this browser.')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-
-  useEffect(() => {
-    const stored = window.localStorage.getItem('shortaudit-backups')
-    if (!stored) return
-
-    try {
-      setSavedAudits(JSON.parse(stored))
-      setBackupMessage('Loaded saved audit backups from this browser.')
-    } catch {
-      window.localStorage.removeItem('shortaudit-backups')
-      setBackupMessage('Backup vault was reset because the saved file was unreadable.')
-    }
-  }, [])
-
-  function persistBackups(records) {
-    setSavedAudits(records)
-    window.localStorage.setItem('shortaudit-backups', JSON.stringify(records))
-  }
-
-  function saveAuditBackup(audit) {
-    const record = {
-      id: crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}`,
-      createdAt: new Date().toISOString(),
-      form,
-      analysis: audit,
-    }
-    const next = [record, ...savedAudits].slice(0, 25)
-    persistBackups(next)
-    setBackupMessage('Audit backed up locally. Export JSON for a permanent copy.')
-  }
-
-  function exportBackups() {
-    const blob = new Blob([JSON.stringify(savedAudits, null, 2)], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = `shortaudit-backups-${new Date().toISOString().slice(0, 10)}.json`
-    link.click()
-    URL.revokeObjectURL(url)
-    setBackupMessage('Downloaded your backup JSON file.')
-  }
-
-  function clearBackups() {
-    persistBackups([])
-    setBackupMessage('Local backup vault cleared.')
-  }
 
   function updateField(field, value) {
     setForm((current) => ({ ...current, [field]: value }))
@@ -112,7 +46,6 @@ export default function Dashboard() {
       const result = await analyzeVideo(form)
       setAnalysis(result)
       setHistory((current) => [result, ...current].slice(0, 4))
-      saveAuditBackup(result)
     } catch (err) {
       setError(err.message)
     } finally {
@@ -125,29 +58,21 @@ export default function Dashboard() {
       <div className="mx-auto max-w-7xl">
         <div className="mb-8 flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
           <div>
-            <Pill>Creator command center</Pill>
+            <Pill tone="amber">Creator command center</Pill>
             <h2 className="mt-4 text-4xl font-black tracking-[-0.04em] text-white sm:text-5xl">Audit the distribution story before you post.</h2>
           </div>
-          <p className="max-w-xl text-slate-400">Paste a YouTube Shorts link, upload context, or describe the short. ShortAudit AI uses the title, URL, and your notes to create a strategy audit. It does not scrape private video data yet.</p>
+          <p className="max-w-xl text-slate-400">Upload context, describe the short, and ShortAudit AI returns practical analysis that feels like a strategist reviewed your video.</p>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
           <Card className="p-5 sm:p-6">
             <form onSubmit={handleAnalyze} className="space-y-5">
-              <div className="rounded-3xl border border-dashed border-white/20 bg-white/[0.04] p-6 text-center">
-                <UploadCloud className="mx-auto text-white" size={34} />
-                <p className="mt-3 font-bold text-white">Paste a YouTube video link</p>
-                <p className="mt-1 text-sm text-slate-400">Paste a YouTube link below or add details manually. The MVP analyzes the public URL context plus your title and notes; full video transcript scraping can be added later.</p>
+              <div className="rounded-3xl border border-dashed border-cyan-200/20 bg-cyan-300/5 p-6 text-center">
+                <UploadCloud className="mx-auto text-cyan-200" size={34} />
+                <p className="mt-3 font-bold text-white">Drop short-form video</p>
+                <p className="mt-1 text-sm text-slate-400">Demo MVP analyzes metadata and creative context. Video parsing can be added later.</p>
               </div>
 
-              <div>
-                <FieldLabel>YouTube / Short-form video link</FieldLabel>
-                <div className="relative">
-                  <Link2 className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" size={18} />
-                  <input className="input-shell pl-11" placeholder="https://www.youtube.com/shorts/..." value={form.videoUrl} onChange={(event) => updateField('videoUrl', event.target.value)} />
-                </div>
-                <p className="mt-2 text-xs leading-5 text-zinc-500">How this works: paste a public YouTube Shorts link, then add title/context. The AI reviews the URL, metadata you provide, platform, upload method, and CTA intensity to produce an audit. It is not claiming direct access to YouTube analytics.</p>
-              </div>
               <div>
                 <FieldLabel>Title</FieldLabel>
                 <input className="input-shell" value={form.title} onChange={(event) => updateField('title', event.target.value)} />
@@ -163,38 +88,9 @@ export default function Dashboard() {
                 <Select label="CTA intensity" value={form.ctaIntensity} onChange={(value) => updateField('ctaIntensity', value)} options={['Low', 'Medium', 'Aggressive']} />
               </div>
 
-              <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-4">
-                <div className="mb-4 flex items-center gap-2 text-sm font-bold text-white"><Database size={17} /> Extra data for a sharper audit</div>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <TextInput label="Niche" value={form.niche} onChange={(value) => updateField('niche', value)} placeholder="AI tools, fitness, luxury travel..." />
-                  <TextInput label="Target audience" value={form.targetAudience} onChange={(value) => updateField('targetAudience', value)} placeholder="Who should this video reach?" />
-                  <TextInput label="Original hook" value={form.originalHook} onChange={(value) => updateField('originalHook', value)} placeholder="First line / first 2 seconds" />
-                  <TextInput label="Posting time" value={form.postingTime} onChange={(value) => updateField('postingTime', value)} placeholder="Monday 7 PM, weekend morning..." />
-                  <TextInput label="Video length" value={form.videoLength} onChange={(value) => updateField('videoLength', value)} placeholder="34 seconds" />
-                  <TextInput label="Hashtags" value={form.hashtags} onChange={(value) => updateField('hashtags', value)} placeholder="#ai #shorts" />
-                </div>
-                <div className="mt-4 grid gap-4 sm:grid-cols-5">
-                  <TextInput label="Views" value={form.views} onChange={(value) => updateField('views', value)} placeholder="5200" />
-                  <TextInput label="Likes" value={form.likes} onChange={(value) => updateField('likes', value)} placeholder="318" />
-                  <TextInput label="Comments" value={form.comments} onChange={(value) => updateField('comments', value)} placeholder="42" />
-                  <TextInput label="Shares" value={form.shares} onChange={(value) => updateField('shares', value)} placeholder="19" />
-                  <TextInput label="Saves" value={form.saves} onChange={(value) => updateField('saves', value)} placeholder="71" />
-                </div>
-                <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                  <TextInput label="Avg watch time" value={form.avgWatchTime} onChange={(value) => updateField('avgWatchTime', value)} placeholder="21 seconds" />
-                  <TextInput label="Retention %" value={form.retentionPercent} onChange={(value) => updateField('retentionPercent', value)} placeholder="62" />
-                </div>
-                <div className="mt-4 grid gap-4">
-                  <TextArea label="Transcript / caption text" value={form.transcript} onChange={(value) => updateField('transcript', value)} placeholder="Paste the spoken script, captions, or scene-by-scene breakdown." />
-                  <TextArea label="Thumbnail / cover / first-frame notes" value={form.thumbnailNotes} onChange={(value) => updateField('thumbnailNotes', value)} placeholder="Describe the first frame, cover text, face expression, visual style, or image idea." />
-                  <TextArea label="Competitor links / references" value={form.competitorLinks} onChange={(value) => updateField('competitorLinks', value)} placeholder="Paste viral videos or creator references you want the AI to compare against." />
-                  <TextArea label="Past winners / patterns" value={form.pastWinners} onChange={(value) => updateField('pastWinners', value)} placeholder="What worked before? Add winning hooks, formats, topics, comments, or viral picture/cover ideas." />
-                </div>
-              </div>
+              {error ? <p className="rounded-2xl border border-red-300/20 bg-red-500/10 p-3 text-sm text-red-100">{error}</p> : null}
 
-              {error ? <p className="rounded-2xl border border-white/20 bg-white/10 p-3 text-sm text-white">{error}</p> : null}
-
-              <button disabled={loading} className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-white to-zinc-400 px-5 py-4 font-black text-black shadow-glow transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-70">
+              <button disabled={loading} className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-cyan-300 to-fuchsia-400 px-5 py-4 font-black text-slate-950 shadow-glow transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-70">
                 {loading ? <Loader2 className="animate-spin" size={18} /> : <Wand2 size={18} />}
                 {loading ? 'Running AI audit...' : 'Analyze Video'}
               </button>
@@ -203,7 +99,7 @@ export default function Dashboard() {
 
           <div className="space-y-6">
             <AnalysisGrid analysis={analysis} />
-            <BonusPanel analysis={analysis} history={history} savedAudits={savedAudits} backupMessage={backupMessage} onExport={exportBackups} onClear={clearBackups} />
+            <BonusPanel analysis={analysis} history={history} />
           </div>
         </div>
       </div>
@@ -222,25 +118,6 @@ function Select({ label, value, onChange, options }) {
   )
 }
 
-
-function TextInput({ label, value, onChange, placeholder }) {
-  return (
-    <div>
-      <FieldLabel>{label}</FieldLabel>
-      <input className="input-shell" value={value} placeholder={placeholder} onChange={(event) => onChange(event.target.value)} />
-    </div>
-  )
-}
-
-function TextArea({ label, value, onChange, placeholder }) {
-  return (
-    <div>
-      <FieldLabel>{label}</FieldLabel>
-      <textarea className="input-shell min-h-24 resize-none" value={value} placeholder={placeholder} onChange={(event) => onChange(event.target.value)} />
-    </div>
-  )
-}
-
 function AnalysisGrid({ analysis }) {
   const cards = [
     { title: 'Retention Risk', icon: Gauge, level: analysis.retentionRisk.level, text: analysis.retentionRisk.explanation },
@@ -255,13 +132,13 @@ function AnalysisGrid({ analysis }) {
       <Card className="p-6 xl:col-span-2">
         <div className="grid gap-6 md:grid-cols-[1fr_220px] md:items-center">
           <div>
-            <div className="mb-3 flex items-center gap-2 text-white"><BarChart3 size={18} /><span className="font-bold">Hook Strength</span></div>
+            <div className="mb-3 flex items-center gap-2 text-cyan-100"><BarChart3 size={18} /><span className="font-bold">Hook Strength</span></div>
             <p className="text-sm leading-6 text-slate-400">{analysis.hookStrength.explanation}</p>
             <ScoreBar value={analysis.hookStrength.score} max={10} className="mt-5" />
           </div>
           <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 text-center">
             <p className="text-xs uppercase tracking-[0.25em] text-slate-400">Viral potential</p>
-            <p className="mt-2 bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-6xl font-black text-transparent">{Math.round(analysis.viralPotentialScore)}</p>
+            <p className="mt-2 bg-gradient-to-r from-cyan-200 to-fuchsia-300 bg-clip-text text-6xl font-black text-transparent">{Math.round(analysis.viralPotentialScore)}</p>
             <p className="text-sm text-slate-400">premium score</p>
           </motion.div>
         </div>
@@ -270,7 +147,7 @@ function AnalysisGrid({ analysis }) {
       {cards.map((card) => (
         <Card key={card.title} className="p-5">
           <div className="flex items-start justify-between gap-4">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/10 text-white"><card.icon size={18} /></div>
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/10 text-cyan-100"><card.icon size={18} /></div>
             <span className="rounded-full border border-white/10 px-3 py-1 text-xs font-bold text-white">{card.level}</span>
           </div>
           <h3 className="mt-5 text-lg font-bold text-white">{card.title}</h3>
@@ -288,7 +165,7 @@ function AnalysisGrid({ analysis }) {
   )
 }
 
-function BonusPanel({ analysis, history, savedAudits, backupMessage, onExport, onClear }) {
+function BonusPanel({ analysis, history }) {
   const chart = [42, 58, 51, 74, 62, 83, analysis.viralPotentialScore]
   return (
     <Card className="p-5">
@@ -306,7 +183,7 @@ function BonusPanel({ analysis, history, savedAudits, backupMessage, onExport, o
         <div>
           <p className="text-sm font-semibold text-slate-400">Fake analytics trend</p>
           <div className="mt-4 flex h-20 items-end gap-2">
-            {chart.map((value, index) => <div key={`${value}-${index}`} className="flex-1 rounded-t-xl bg-gradient-to-t from-zinc-600 to-white" style={{ height: `${value}%` }} />)}
+            {chart.map((value, index) => <div key={`${value}-${index}`} className="flex-1 rounded-t-xl bg-gradient-to-t from-cyan-500 to-fuchsia-300" style={{ height: `${value}%` }} />)}
           </div>
         </div>
       </div>
@@ -316,27 +193,6 @@ function BonusPanel({ analysis, history, savedAudits, backupMessage, onExport, o
       </div>
       <div className="mt-6 flex flex-wrap gap-2">
         {history.map((item, index) => <span key={index} className="rounded-full border border-white/10 px-3 py-1 text-xs text-slate-300">Audit #{history.length - index}: {Math.round(item.viralPotentialScore)} viral</span>)}
-      </div>
-      <div className="mt-6 rounded-3xl border border-white/10 bg-black/40 p-4">
-        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-          <div>
-            <p className="flex items-center gap-2 text-sm font-bold text-white"><Database size={16} /> Backup vault</p>
-            <p className="mt-1 text-xs leading-5 text-slate-400">{backupMessage} Saved audits stay in this browser with the full form data, analysis, video links, metrics, and viral reference notes.</p>
-          </div>
-          <div className="flex gap-2">
-            <button type="button" onClick={onExport} disabled={!savedAudits.length} className="inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-2 text-xs font-bold text-white transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40"><Download size={14} /> Export</button>
-            <button type="button" onClick={onClear} disabled={!savedAudits.length} className="inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-2 text-xs font-bold text-white transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40"><Trash2 size={14} /> Clear</button>
-          </div>
-        </div>
-        <div className="mt-4 grid gap-2 sm:grid-cols-2">
-          {savedAudits.slice(0, 4).map((item) => (
-            <div key={item.id} className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 text-xs text-slate-300">
-              <p className="font-bold text-white">{item.form.title || item.form.videoUrl || 'Untitled audit'}</p>
-              <p className="mt-1">{new Date(item.createdAt).toLocaleString()} · viral {Math.round(item.analysis.viralPotentialScore)}</p>
-            </div>
-          ))}
-          {!savedAudits.length ? <p className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 text-xs text-slate-400">Run an audit to create your first backup.</p> : null}
-        </div>
       </div>
     </Card>
   )

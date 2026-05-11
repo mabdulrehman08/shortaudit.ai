@@ -4,8 +4,8 @@ ShortAudit AI is a modern AI SaaS MVP that helps creators understand why short-f
 
 ## Features
 
-- Premium black-and-white dark SaaS landing page with glassmorphism, monochrome gradients, and motion.
-- Dashboard with video upload placeholder, YouTube/short-form URL input, title/context inputs, transcript, niche, audience, metrics, hashtags, thumbnail notes, competitor links, past winners, platform selection, upload method, and CTA intensity.
+- Premium dark SaaS landing page with glassmorphism, gradients, and motion.
+- Dashboard with video upload placeholder, title/context inputs, platform selection, upload method, and CTA intensity.
 - AI analysis cards for:
   - Hook strength
   - Retention risk
@@ -18,8 +18,6 @@ ShortAudit AI is a modern AI SaaS MVP that helps creators understand why short-f
 - Bonus founder-demo features:
   - Fake analytics chart
   - Upload history chips
-  - Browser backup vault using `localStorage`
-  - Exportable JSON backup for audits, video links, metrics, and viral reference notes
   - Shadowban probability
   - AI confidence meter
   - Manual vs API upload comparison
@@ -27,19 +25,6 @@ ShortAudit AI is a modern AI SaaS MVP that helps creators understand why short-f
 - Localized hook generator for USA Gen-Z, UK, Pakistan Gen-Z, Dubai, India, and Spanish-speaking audiences.
 - Express backend with OpenAI Responses API integration and JSON-schema outputs.
 - Mock fallback responses when `OPENAI_API_KEY` is not set, so the product is demo-ready locally.
-
-## What is done now
-
-- Users can paste a YouTube Shorts or short-form video link.
-- Users can feed richer creator data: niche, target audience, original hook, transcript/captions, hashtags, posting time, video length, views, likes, comments, shares, saves, average watch time, retention percentage, thumbnail/cover notes, competitor links, and past winners.
-- Each completed audit is automatically backed up in the browser with the full form payload and AI output.
-- Users can export all saved audit backups as a JSON file for a more permanent copy.
-- Users can clear local backups from the dashboard.
-- The AI prompt now considers metrics, reference links, and viral picture/cover notes when generating advice.
-
-## Backup model
-
-The current MVP stores backups in the user’s browser with `localStorage`. That means the data remains on the same device/browser and can be exported as JSON. For production accounts, the next step would be adding a real database such as Postgres/Supabase/Firebase so backups sync across devices and creator teams.
 
 ## Tech Stack
 
@@ -119,30 +104,14 @@ npm run dev
 
 ### `POST /api/analyze`
 
-Analyzes a short-form video concept. Users can paste a public YouTube Shorts link; the MVP treats the URL as creator-provided context and combines it with the title, notes/transcript, platform, upload method, and CTA intensity. It does not claim private YouTube analytics access or full video scraping.
+Analyzes a short-form video concept.
 
 Example body:
 
 ```json
 {
-  "videoUrl": "https://www.youtube.com/shorts/example",
   "title": "How I made $5000 using AI in 30 days",
   "description": "Fast-paced AI side hustle short with screenshots and a CTA in the first 3 seconds.",
-  "niche": "AI side hustles",
-  "targetAudience": "Gen-Z creators who want extra income",
-  "originalHook": "I tried making money with AI for 30 days",
-  "transcript": "Day 1 I tested five AI tools...",
-  "hashtags": "#ai #sidehustle #youtubeshorts",
-  "views": "5200",
-  "likes": "318",
-  "comments": "42",
-  "shares": "19",
-  "saves": "71",
-  "avgWatchTime": "21 seconds",
-  "retentionPercent": "62",
-  "thumbnailNotes": "Black background, white caption, AI dashboard screenshot",
-  "competitorLinks": "https://www.youtube.com/shorts/competitor-example",
-  "pastWinners": "Personal proof screenshots worked best.",
   "platform": "YouTube Shorts",
   "uploadMethod": "API Upload",
   "ctaIntensity": "Aggressive"
@@ -219,6 +188,6 @@ FRONTEND_ORIGIN=https://your-vercel-app.vercel.app
 
 ## Production Notes
 
-- The upload box and video URL field are intentionally polished MVP inputs; real video ingestion, transcript fetching, YouTube Data API metadata, and cloud database backups can be added later with object storage, platform API credentials, and Postgres/Supabase/Firebase.
+- The upload box is intentionally a polished MVP placeholder; real video ingestion can be added with object storage and transcription.
 - The product does not claim true shadowban detection. It estimates distribution risk from creator-provided context and known content strategy patterns.
 - The backend returns mock fallback output if no OpenAI API key is configured, which keeps demos fast and resilient.

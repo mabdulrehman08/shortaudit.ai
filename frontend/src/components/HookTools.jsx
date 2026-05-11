@@ -62,13 +62,13 @@ export default function HookTools() {
             </div>
             <div className="mt-5 flex flex-wrap gap-2">
               {styles.map((style) => (
-                <button key={style} onClick={() => onRewrite(style)} className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm font-bold text-slate-100 transition hover:border-white/40 hover:bg-white/10">
+                <button key={style} onClick={() => onRewrite(style)} className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm font-bold text-slate-100 transition hover:border-cyan-300/40 hover:bg-cyan-300/10">
                   {busy === style ? <Loader2 className="inline animate-spin" size={14} /> : style}
                 </button>
               ))}
             </div>
             <div className="mt-6 space-y-3">
-              {rewrites.map((item) => <div key={item} className="rounded-2xl border border-white/10 bg-black/50 p-4 text-sm leading-6 text-slate-200">“{item}”</div>)}
+              {rewrites.map((item) => <div key={item} className="rounded-2xl border border-white/10 bg-slate-950/50 p-4 text-sm leading-6 text-slate-200">“{item}”</div>)}
             </div>
           </Card>
 
@@ -80,16 +80,16 @@ export default function HookTools() {
                 {audiences.map((item) => <option key={item}>{item}</option>)}
               </select>
             </div>
-            <button onClick={onLocalize} className="mt-5 flex w-full items-center justify-center gap-2 rounded-2xl bg-white px-5 py-4 font-black text-black transition hover:bg-zinc-200">
+            <button onClick={onLocalize} className="mt-5 flex w-full items-center justify-center gap-2 rounded-2xl bg-white px-5 py-4 font-black text-slate-950 transition hover:bg-cyan-100">
               {busy === 'localize' ? <Loader2 className="animate-spin" size={18} /> : <MessageCircle size={18} />}
               Localize Hook
             </button>
-            <div className="mt-6 rounded-[1.5rem] border border-white/20 bg-white/10 p-6">
-              <p className="text-xs uppercase tracking-[0.25em] text-white">{audience}</p>
+            <div className="mt-6 rounded-[1.5rem] border border-cyan-300/20 bg-cyan-300/10 p-6">
+              <p className="text-xs uppercase tracking-[0.25em] text-cyan-100">{audience}</p>
               <p className="mt-3 text-2xl font-black leading-tight text-white">“{localized}”</p>
               <p className="mt-4 text-sm text-slate-400">Culturally tuned for references, rhythm, slang, and platform-native phrasing.</p>
             </div>
-            {error ? <p className="mt-4 rounded-2xl border border-white/20 bg-white/10 p-3 text-sm text-white">{error}</p> : null}
+            {error ? <p className="mt-4 rounded-2xl border border-red-300/20 bg-red-500/10 p-3 text-sm text-red-100">{error}</p> : null}
           </Card>
         </div>
       </div>

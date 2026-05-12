@@ -1,8 +1,10 @@
 import { motion } from 'framer-motion'
 
+const MotionDiv = motion.div
+
 export function Card({ children, className = '' }) {
   return (
-    <motion.div
+    <MotionDiv
       initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-80px' }}
@@ -10,7 +12,7 @@ export function Card({ children, className = '' }) {
       className={`glass gradient-border rounded-3xl shadow-card ${className}`}
     >
       {children}
-    </motion.div>
+    </MotionDiv>
   )
 }
 
@@ -28,7 +30,7 @@ export function ScoreBar({ value, max = 100, className = '' }) {
   const width = Math.max(0, Math.min(100, (value / max) * 100))
   return (
     <div className={`h-2.5 overflow-hidden rounded-full bg-slate-800 ${className}`}>
-      <motion.div
+      <MotionDiv
         initial={{ width: 0 }}
         animate={{ width: `${width}%` }}
         transition={{ duration: 0.8, ease: 'easeOut' }}

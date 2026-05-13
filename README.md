@@ -1,33 +1,193 @@
 # ShortAudit AI
 
-ShortAudit AI is a modern SaaS product prototype for auditing short-form videos before upload. It is designed for creators and teams publishing to TikTok, YouTube Shorts, Instagram Reels, and AI-generated video workflows.
+ShortAudit AI is a modern AI SaaS MVP that helps creators understand why short-form videos may underperform on TikTok, YouTube Shorts, and Instagram Reels. It acts like an AI content distribution analyst for weak hooks, retention risk, CTA aggression, upload-method risk, AI-generated feel, repetitive formats, and platform-specific suppression patterns.
 
-## Product scope
+## Features
 
-- AI Video Audit Engine for MP4 uploads, hook scoring, retention prediction, CTA analysis, subtitle readability, AI-pattern risk, and shadowban signals.
-- Feedback dashboard with failure reasons, improvements, retention graphs, upload timing, captions, hashtags, thumbnail recommendations, and scene-swap suggestions.
-- Viral pattern learning UI comparing uploaded videos to high-performing pacing, clip cadence, emotional hook, sound design, subtitle, and curiosity-gap benchmarks.
-- Creator intelligence panels for upload history, views, retention, engagement, and score trends.
-- Platform-specific optimization for TikTok, YouTube Shorts, and Instagram Reels.
-- SaaS pages for landing, pricing, auth, dashboard, upload, analytics, creator history, settings, and API access.
+- Premium dark SaaS landing page with glassmorphism, gradients, and motion.
+- Dashboard with video upload placeholder, title/context inputs, platform selection, upload method, and CTA intensity.
+- AI analysis cards for:
+  - Hook strength
+  - Retention risk
+  - Algorithm risk
+  - CTA aggression
+  - AI-generated detection risk
+  - Duplicate/repetitive content risk
+  - Platform-specific advice
+  - Viral potential score
+- Bonus founder-demo features:
+  - Fake analytics chart
+  - Upload history chips
+  - Shadowban probability
+  - AI confidence meter
+  - Manual vs API upload comparison
+- Hook rewriter with styles: Curiosity, Gen-Z, Luxury, Ragebait, Emotional, Storytelling.
+- Localized hook generator for USA Gen-Z, UK, Pakistan Gen-Z, Dubai, India, and Spanish-speaking audiences.
+- Express backend with OpenAI Responses API integration and JSON-schema outputs.
+- Mock fallback responses when `OPENAI_API_KEY` is not set, so the product is demo-ready locally.
 
-## Suggested production architecture
+## Tech Stack
 
-- Frontend: React, Next.js/Vite, Tailwind CSS, Framer Motion, and chart components.
-- Backend: Node.js/Express or FastAPI workers for upload orchestration.
-- Data: PostgreSQL, Supabase Auth, object storage, and Redis queues.
-- AI/ML: OpenAI API, Whisper transcription, CV frame analysis, NLP hook/caption scoring, and custom viral pattern models.
-- Infrastructure: Vercel, Railway/Render, Cloudflare CDN, Stripe subscriptions, Discord bot and Chrome extension integrations.
+- Frontend: React, Vite, TailwindCSS, Framer Motion, Lucide React
+- Backend: Node.js, Express, OpenAI API, Zod
+- Deployment: Vercel for frontend, Railway for backend
 
-## Local development
+## Project Structure
+
+```text
+shortaudit.ai/
+├── backend/
+│   ├── src/
+│   │   ├── lib/fallbackAnalysis.js
+│   │   ├── routes/aiRoutes.js
+│   │   ├── services/openaiService.js
+│   │   └── server.js
+│   ├── .env.example
+│   └── package.json
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── lib/api.js
+│   │   ├── App.jsx
+│   │   ├── index.css
+│   │   └── main.jsx
+│   ├── .env.example
+│   └── package.json
+└── package.json
+```
+
+## Local Setup
+
+### 1. Install dependencies
 
 ```bash
 npm install
+```
+
+### 2. Configure environment variables
+
+Backend:
+
+```bash
+cp backend/.env.example backend/.env
+```
+
+Set your OpenAI key in `backend/.env`:
+
+```env
+OPENAI_API_KEY=sk-your-key
+OPENAI_MODEL=gpt-4.1-mini
+PORT=8080
+FRONTEND_ORIGIN=http://localhost:5173
+```
+
+Frontend:
+
+```bash
+cp frontend/.env.example frontend/.env
+```
+
+```env
+VITE_API_URL=http://localhost:8080
+```
+
+### 3. Run the app
+
+```bash
 npm run dev
 ```
 
-## Production build
+- Frontend: <http://localhost:5173>
+- Backend health check: <http://localhost:8080/health>
 
-```bash
-npm run build
+## API Routes
+
+### `POST /api/analyze`
+
+Analyzes a short-form video concept.
+
+Example body:
+
+```json
+{
+  "title": "How I made $5000 using AI in 30 days",
+  "description": "Fast-paced AI side hustle short with screenshots and a CTA in the first 3 seconds.",
+  "platform": "YouTube Shorts",
+  "uploadMethod": "API Upload",
+  "ctaIntensity": "Aggressive"
+}
 ```
+
+### `POST /api/rewrite-hook`
+
+```json
+{
+  "hook": "How I made $5000 using AI",
+  "style": "Curiosity"
+}
+```
+
+### `POST /api/localize-hook`
+
+```json
+{
+  "hook": "How I made $5000 using AI",
+  "audience": "Pakistan Gen-Z"
+}
+```
+
+## Prompt Engineering
+
+The analysis route prompts the model to act as:
+
+> an elite short-form content strategist and algorithm analyst
+
+The backend asks the model to analyze:
+
+- Hook quality
+- Retention risk
+- CTA problems
+- AI-generated appearance
+- Platform risks
+- Repetitive formatting
+- Algorithmic weaknesses
+- Shadowban-like suppression patterns
+- Manual vs API upload considerations
+
+The OpenAI service enforces structured JSON responses with schema validation from the Responses API, making frontend rendering reliable.
+
+## Deployment
+
+### Frontend on Vercel
+
+1. Create a Vercel project from this repository.
+2. Set the root directory to `frontend`.
+3. Build command: `npm run build`.
+4. Output directory: `dist`.
+5. Add environment variable:
+
+```env
+VITE_API_URL=https://your-railway-backend.up.railway.app
+```
+
+### Backend on Railway
+
+1. Create a Railway service from this repository.
+2. Set the root directory to `backend`.
+3. Start command: `npm run start`.
+4. Add environment variables:
+
+```env
+OPENAI_API_KEY=sk-your-key
+OPENAI_MODEL=gpt-4.1-mini
+PORT=8080
+FRONTEND_ORIGIN=https://your-vercel-app.vercel.app
+```
+
+5. Deploy and copy the public Railway URL into `VITE_API_URL` on Vercel.
+
+## Production Notes
+
+- The upload box is intentionally a polished MVP placeholder; real video ingestion can be added with object storage and transcription.
+- The product does not claim true shadowban detection. It estimates distribution risk from creator-provided context and known content strategy patterns.
+- The backend returns mock fallback output if no OpenAI API key is configured, which keeps demos fast and resilient.

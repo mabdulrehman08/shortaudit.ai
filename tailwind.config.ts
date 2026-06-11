@@ -8,16 +8,17 @@ const config: Config = {
         sans: ['var(--font-sans)', 'Inter', 'ui-sans-serif', 'system-ui'],
       },
       colors: {
-        void: '#05060f',
-        ink: '#0b1020',
-        panel: '#0d1224',
+        void: '#050609',
+        ink: '#07120c',
+        panel: '#101410',
+        lime: '#baff29',
         neon: '#6fffe9',
-        pulse: '#a855f7',
+        pulse: '#7c5cff',
         flare: '#ff4ecd',
-        warning: '#f59e0b',
+        warning: '#ffb020',
       },
       boxShadow: {
-        glow: '0 0 60px rgba(111, 255, 233, 0.22)',
+        glow: '0 0 56px rgba(186, 255, 41, 0.2)',
         magenta: '0 0 70px rgba(255, 78, 205, 0.18)',
       },
       backgroundImage: {

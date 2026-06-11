@@ -6,12 +6,12 @@ export function cn(...classes: Array<string | false | null | undefined>) {
 }
 
 export function Section({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <section className={cn('mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8', className)}>{children}</section>;
+  return <section className={cn('mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8', className)}>{children}</section>;
 }
 
 export function Badge({ children, icon: Icon = Sparkles }: { children: React.ReactNode; icon?: LucideIcon }) {
   return (
-    <span className="inline-flex items-center gap-2 rounded-full border border-neon/30 bg-neon/10 px-4 py-2 text-sm font-bold text-neon shadow-glow">
+    <span className="inline-flex items-center gap-2 rounded-full border border-lime/30 bg-lime/10 px-4 py-2 text-sm font-bold text-lime shadow-glow">
       <Icon className="h-4 w-4" />
       {children}
     </span>
@@ -19,11 +19,12 @@ export function Badge({ children, icon: Icon = Sparkles }: { children: React.Rea
 }
 
 export function Card({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <div className={cn('glass rounded-[2rem] p-5 sm:p-6', className)}>{children}</div>;
+  return <div className={cn('glass rounded-lg p-5 sm:p-6', className)}>{children}</div>;
 }
 
-export function ScoreBar({ label, value, tone = 'neon' }: { label: string; value: number; tone?: 'neon' | 'pulse' | 'flare' | 'warning' }) {
+export function ScoreBar({ label, value, tone = 'lime' }: { label: string; value: number; tone?: 'lime' | 'neon' | 'pulse' | 'flare' | 'warning' }) {
   const colors = {
+    lime: 'from-lime to-emerald-300',
     neon: 'from-neon to-cyan-300',
     pulse: 'from-pulse to-violet-300',
     flare: 'from-flare to-pink-300',

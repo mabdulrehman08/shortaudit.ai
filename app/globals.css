@@ -18,7 +18,7 @@ html {
 body {
   margin: 0;
   min-width: 320px;
-  background: #05060f;
+  background: #050609;
   color: white;
 }
 
@@ -30,14 +30,14 @@ textarea {
 }
 
 .glass {
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.035));
-  box-shadow: 0 24px 80px rgba(0,0,0,0.35);
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  background: linear-gradient(135deg, rgba(255,255,255,0.09), rgba(255,255,255,0.035));
+  box-shadow: 0 24px 80px rgba(0,0,0,0.42);
   backdrop-filter: blur(22px);
 }
 
 .text-gradient {
-  background: linear-gradient(90deg, #fff, #6fffe9, #ff4ecd);
+  background: linear-gradient(90deg, #fff, #baff29, #6fffe9);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

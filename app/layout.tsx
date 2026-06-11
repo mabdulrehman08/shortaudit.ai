@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#05060f',
+  themeColor: '#050609',
   width: 'device-width',
   initialScale: 1,
 };
@@ -31,18 +31,18 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en">
       <body className="min-h-screen overflow-x-hidden bg-void font-sans antialiased">
         <div aria-hidden className="pointer-events-none fixed inset-0 -z-10">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(168,85,247,.32),transparent_28%),radial-gradient(circle_at_top_right,rgba(111,255,233,.18),transparent_30%),linear-gradient(180deg,#05060f_0%,#080b18_45%,#05060f_100%)]" />
-          <div className="absolute inset-0 bg-grid bg-[length:44px_44px] opacity-25 [mask-image:linear-gradient(to_bottom,black,transparent_82%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(186,255,41,.18),transparent_28%),radial-gradient(circle_at_85%_18%,rgba(111,255,233,.13),transparent_30%),linear-gradient(180deg,#050609_0%,#0a0f0d_44%,#050609_100%)]" />
+          <div className="absolute inset-0 bg-grid bg-[length:44px_44px] opacity-20 [mask-image:linear-gradient(to_bottom,black,transparent_82%)]" />
         </div>
-        <header className="sticky top-0 z-50 border-b border-white/10 bg-void/70 backdrop-blur-2xl">
+        <header className="sticky top-0 z-50 border-b border-white/10 bg-void/76 backdrop-blur-2xl">
           <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
             <Link href="/" className="flex items-center gap-3">
-              <span className="grid h-11 w-11 place-items-center rounded-2xl border border-neon/40 bg-neon/10 shadow-glow">
-                <ScanEye className="h-5 w-5 text-neon" />
+              <span className="grid h-11 w-11 place-items-center rounded-lg border border-lime/40 bg-lime/10 shadow-glow">
+                <ScanEye className="h-5 w-5 text-lime" />
               </span>
               <span>
                 <span className="block text-lg font-black tracking-tight">ShortAudit AI</span>
-                <span className="hidden text-xs text-slate-400 sm:block">AI-powered short-form video intelligence</span>
+                <span className="hidden text-xs text-slate-400 sm:block">Extended creator intelligence</span>
               </span>
             </Link>
             <nav className="hidden items-center gap-1 rounded-full border border-white/10 bg-white/[0.04] p-1 md:flex">
@@ -52,8 +52,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                 </Link>
               ))}
             </nav>
-            <Link href="/upload" className="rounded-full bg-white px-4 py-2 text-sm font-black text-ink transition hover:bg-neon sm:px-5">
-              Audit video
+            <Link href="/upload" className="rounded-full bg-lime px-4 py-2 text-sm font-black text-ink transition hover:bg-white sm:px-5">
+              Run demo
             </Link>
           </div>
         </header>
@@ -61,7 +61,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <footer className="border-t border-white/10 py-10">
           <div className="mx-auto flex max-w-7xl flex-col justify-between gap-4 px-4 text-sm text-slate-500 sm:px-6 lg:flex-row lg:px-8">
             <span>© 2026 ShortAudit AI. Built for creators who test before they post.</span>
-            <span>Vercel-ready · Supabase Auth · Serverless API routes · OpenAI-ready</span>
+            <span>Demo-ready audit engine · Retention forecast · Hook rewrites</span>
           </div>
         </footer>
       </body>

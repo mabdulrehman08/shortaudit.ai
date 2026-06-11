@@ -59,12 +59,16 @@ async function persistUpload(file: File) {
     return null;
   }
 
-  const blob = await put(`uploads/${Date.now()}-${file.name}`, file, {
-    access: 'public',
-    token: env.blobReadWriteToken,
-  });
+  try {
+    const blob = await put(`uploads/${Date.now()}-${file.name}`, file, {
+      access: 'public',
+      token: env.blobReadWriteToken,
+    });
 
-  return blob.url;
+    return blob.url;
+  } catch {
+    return null;
+  }
 }
 
 async function transcribeAudioPlaceholder(file: File) {
@@ -92,23 +96,27 @@ async function persistReport({ file, uploadedUrl, report }: { file: File; upload
     return;
   }
 
-  const { data: userData } = await supabase.auth.getUser();
-  const user = userData.user;
+  try {
+    const { data: userData } = await supabase.auth.getUser();
+    const user = userData.user;
 
-  if (!user) {
+    if (!user) {
+      return;
+    }
+
+    const { data: video } = await supabase
+      .from('videos')
+      .insert({ user_id: user.id, file_name: file.name, file_url: uploadedUrl, file_size: file.size, mime_type: file.type, duration_seconds: report.durationSeconds })
+      .select('id')
+      .single();
+
+    if (!video) {
+      return;
+    }
+
+    await supabase.from('transcripts').insert({ video_id: video.id, transcript: report.transcript, provider: env.deepgramApiKey ? 'deepgram' : 'whisper-fallback' });
+    await supabase.from('analysis_reports').insert({ video_id: video.id, user_id: user.id, report, scores: report.scores });
+  } catch {
     return;
   }
-
-  const { data: video } = await supabase
-    .from('videos')
-    .insert({ user_id: user.id, file_name: file.name, file_url: uploadedUrl, file_size: file.size, mime_type: file.type, duration_seconds: report.durationSeconds })
-    .select('id')
-    .single();
-
-  if (!video) {
-    return;
-  }
-
-  await supabase.from('transcripts').insert({ video_id: video.id, transcript: report.transcript, provider: env.deepgramApiKey ? 'deepgram' : 'whisper-fallback' });
-  await supabase.from('analysis_reports').insert({ video_id: video.id, user_id: user.id, report, scores: report.scores });
 }

@@ -12,6 +12,7 @@ export function useUploadAnalysis() {
   const [report, setReport] = useState<AuditReport | null>(null);
 
   const previewUrl = useMemo(() => (file ? URL.createObjectURL(file) : null), [file]);
+  const isDemoFile = file?.name === 'shortaudit-demo-short.mp4';
 
   function validate(nextFile: File) {
     setState('validating');
@@ -32,6 +33,20 @@ export function useUploadAnalysis() {
     setFile(nextFile);
     setState('idle');
     return true;
+  }
+
+  function useSampleVideo() {
+    const sample = new File(
+      ['ShortAudit demo video placeholder: founder explains an AI workflow, shows proof, and asks viewers to save the post.'],
+      'shortaudit-demo-short.mp4',
+      { type: 'video/mp4' },
+    );
+
+    setFile(sample);
+    setReport(null);
+    setProgress(0);
+    setError(null);
+    setState('idle');
   }
 
   async function analyze(platform: Platform) {
@@ -77,5 +92,5 @@ export function useUploadAnalysis() {
     }
   }
 
-  return { file, previewUrl, state, progress, error, report, validate, analyze };
+  return { file, previewUrl, isDemoFile, state, progress, error, report, validate, analyze, useSampleVideo };
 }

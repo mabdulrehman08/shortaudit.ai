@@ -1,0 +1,17 @@
+{
+  "name": "shortaudit-ai",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace @shortaudit/frontend",
+    "dev:backend": "npm run dev --workspace @shortaudit/backend",
+    "dev:frontend": "npm run dev --workspace @shortaudit/frontend",
+    "build": "npm run build --workspace @shortaudit/frontend",
+    "lint": "npm run lint --workspaces --if-present",
+    "start": "npm run start --workspace @shortaudit/backend"
+  }
+}

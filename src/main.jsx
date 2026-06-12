@@ -5,6 +5,7 @@ import {
   ArrowRight,
   BarChart3,
   BrainCircuit,
+  CalendarClock,
   CheckCircle2,
   Clapperboard,
   ClipboardCheck,
@@ -15,6 +16,7 @@ import {
   Hash,
   Layers3,
   Loader2,
+  MousePointer2,
   Play,
   Route,
   ScanEye,
@@ -99,6 +101,7 @@ function App() {
         <AnimatePresence mode="wait">
           {activeView === 'studio' && <StudioPanel key="studio" report={report} />}
           {activeView === 'algorithm' && <AlgorithmPanel key="algorithm" report={report} />}
+          {activeView === 'fastlane' && <FastlaneHomepage key="fastlane" />}
           {activeView === 'dashboard' && <DashboardPanel key="dashboard" report={report} />}
           {activeView === 'report' && <ReportPanel key="report" report={report} />}
         </AnimatePresence>
@@ -118,6 +121,7 @@ function Header({ activeView, setActiveView }) {
         {[
           ['studio', 'Studio'],
           ['algorithm', 'Algorithm'],
+          ['fastlane', 'Fastlane Concept'],
           ['dashboard', 'Dashboard'],
           ['report', 'Report'],
         ].map(([id, label]) => (
@@ -294,6 +298,109 @@ function AlgorithmPanel({ report }) {
   );
 }
 
+function FastlaneHomepage() {
+  const contentCards = [
+    ['Trend remix', 'Turn proven posts into product-native scripts.'],
+    ['AI UGC', 'Pick an avatar, angle, product, and scene style.'],
+    ['Calendar fill', 'Approve 30 days of posts in one planning sprint.'],
+  ];
+
+  const examples = [
+    ['Fitness app', '227K views', '+25K likes'],
+    ['Founder tool', '112K views', '+8.4K clicks'],
+    ['AI SaaS', '31.8M views', '1 viral post'],
+  ];
+
+  return (
+    <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} className="fastlane-page">
+      <div className="fastlane-hero">
+        <div className="fastlane-copy">
+          <div className="eyebrow"><Zap size={16} /> Alternate homepage concept</div>
+          <h1>Fastlane should feel like a content machine, not a long brochure.</h1>
+          <p>
+            A sharper homepage concept for usefastlane.ai: show the workflow immediately, prove the output visually, and make the free-start CTA impossible to miss.
+          </p>
+          <div className="hero-actions">
+            <button className="primary-action">Get content for free <ArrowRight size={18} /></button>
+            <button className="ghost-action"><Play size={18} /> Watch 30-sec flow</button>
+          </div>
+        </div>
+
+        <Card className="fastlane-product">
+          <div className="product-toolbar">
+            <span>Blitz Mode</span>
+            <strong>30 days queued</strong>
+          </div>
+          <div className="swipe-stage">
+            <div className="swipe-card back-card">UGC demo</div>
+            <div className="swipe-card">
+              <div className="swipe-video"><Clapperboard size={46} /></div>
+              <h3>“This app fixes your morning routine”</h3>
+              <p>Hook: Problem-aware · Style: Founder UGC · Platform: TikTok</p>
+              <div className="swipe-actions">
+                <span>Skip</span>
+                <strong>Post</strong>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      <div className="fastlane-flow">
+        <FlowStep icon={Database} label="1. Enter website" text="Fastlane learns the product, audience, offer, and tone." />
+        <FlowStep icon={MousePointer2} label="2. Swipe winners" text="Approve, skip, or remix generated content in Blitz mode." />
+        <FlowStep icon={CalendarClock} label="3. Fill calendar" text="Schedule TikTok, Reels, and Shorts from one queue." />
+        <FlowStep icon={BarChart3} label="4. Double down" text="Use analytics to generate more of what actually worked." />
+      </div>
+
+      <div className="fastlane-grid">
+        <Card>
+          <SectionTitle icon={Sparkles} kicker="What users get" title="One product page, dozens of usable posts." />
+          <div className="content-card-grid">
+            {contentCards.map(([title, text]) => (
+              <div key={title} className="content-tile">
+                <strong>{title}</strong>
+                <span>{text}</span>
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        <Card>
+          <SectionTitle icon={TrendingUp} kicker="Proof section" title="Make the outcomes scannable." />
+          <div className="example-list">
+            {examples.map(([name, views, result]) => (
+              <div key={name} className="example-row">
+                <span>{name}</span>
+                <strong>{views}</strong>
+                <em>{result}</em>
+              </div>
+            ))}
+          </div>
+        </Card>
+      </div>
+
+      <Card className="fastlane-cta">
+        <div>
+          <SectionTitle icon={WandSparkles} kicker="Homepage close" title="From website to scheduled posts before lunch." />
+          <p>Lead with the product motion, then support it with proof, pricing, and examples. Keep the visitor moving toward “Get content for free.”</p>
+        </div>
+        <button className="primary-action">Start free <ArrowRight size={18} /></button>
+      </Card>
+    </motion.section>
+  );
+}
+
+function FlowStep({ icon: Icon, label, text }) {
+  return (
+    <div className="flow-step">
+      <Icon size={22} />
+      <strong>{label}</strong>
+      <span>{text}</span>
+    </div>
+  );
+}
+
 function PipelineNode({ step, icon: Icon, title, text }) {
   return (
     <div className="pipeline-node">
@@ -408,32 +515,30 @@ function RetentionCurve({ values }) {
 }
 
 function estimateScore(idea, platform) {
-  const words = idea.trim().split(/\s+/).filter(Boolean).length;
-  const specificity = /\d|proof|audit|workflow|founder|mistake|failed|customer/i.test(idea) ? 13 : 0;
-  const platformBoost = platform === 'TikTok' ? 4 : platform === 'Instagram Reels' ? 2 : 1;
-  return Math.max(58, Math.min(96, 63 + Math.min(words, 15) + specificity + platformBoost));
+  return analyzeSignals(idea, platform).score;
 }
 
 function createReport(idea, platform, fileName) {
-  const score = estimateScore(idea, platform);
-  const ctaLate = !/(save|comment|follow|try|download|dm)/i.test(idea);
-  const hook = Math.min(98, score + 4);
-  const retention = Math.max(54, score - (ctaLate ? 7 : 1));
+  const analysis = analyzeSignals(idea, platform);
+  const { score, scores, flags } = analysis;
+  const ctaLate = !flags.hasCta;
+  const retention = scores.retention;
+  const summaryTone = score >= 82 ? 'strong' : score >= 68 ? 'workable' : 'underdeveloped';
 
   return {
     fileName,
     platform,
     score,
-    summary: `${fileName} has a strong premise for ${platform}, but the edit needs proof earlier, a tighter mid-video pattern break, and a softer CTA before the retention dip.`,
+    summary: `${fileName} has a ${summaryTone} premise for ${platform}. The score is driven by ${analysis.topSignals.join(', ')}, with the biggest risk coming from ${analysis.mainRisk}.`,
     scores: {
-      hook,
+      hook: scores.hook,
       retention,
-      pacing: Math.max(61, score - 5),
-      cta: ctaLate ? 62 : 83,
-      aiRisk: Math.max(24, 74 - score),
-      discovery: Math.min(94, score + 2),
-      caption: Math.min(93, score + 1),
-      loop: Math.max(58, score - 8),
+      pacing: scores.pacing,
+      cta: scores.cta,
+      aiRisk: scores.aiRisk,
+      discovery: scores.discovery,
+      caption: scores.caption,
+      loop: scores.loop,
     },
     retention: [98, 94, 90, retention, retention - 5, retention - 9, retention - 12, retention - 14, retention - 17, retention - 19, retention - 22, retention - 24].map((value) => Math.max(38, value)),
     hooks: [
@@ -451,6 +556,114 @@ function createReport(idea, platform, fileName) {
     caption: `Before posting on ${platform}, fix the hook and move proof earlier.`,
     tags: ['#shortform', '#contentstrategy', '#aitools', '#creatorgrowth'],
   };
+}
+
+function analyzeSignals(idea, platform) {
+  const text = idea.trim();
+  const normalized = text.toLowerCase();
+  const words = text.split(/\s+/).filter(Boolean);
+  const wordCount = words.length;
+  const firstSentence = normalized.split(/[.!?]/).find(Boolean) || normalized;
+
+  const flags = {
+    hasNumber: /\d/.test(text),
+    hasProof: /\b(proof|result|case study|before|after|customer|revenue|views|leads|saved|built|demo)\b/i.test(text),
+    hasPain: /\b(fail|failed|mistake|wrong|ignored|leaking|flop|problem|struggle|waste|risk|drop)\b/i.test(text),
+    hasCuriosity: /\b(secret|hidden|why|how|what|before|until|watch|wait|nobody|missing)\b/i.test(text),
+    hasCta: /\b(save|comment|follow|try|download|dm|share|subscribe|join|click)\b/i.test(text),
+    hasAudience: /\b(founder|creator|agency|coach|editor|brand|customer|student|team|business)\b/i.test(text),
+    isGeneric: /^(ai video|my video|new post|content idea|test|hello|today|in this video)$/i.test(text) || wordCount < 7,
+    isTooLong: wordCount > 55,
+  };
+
+  const platformFit = {
+    TikTok: flags.hasCuriosity || flags.hasPain ? 84 : 70,
+    'Instagram Reels': flags.hasProof || flags.hasAudience ? 82 : 72,
+    'YouTube Shorts': flags.hasNumber || flags.hasProof ? 82 : 70,
+  }[platform] || 72;
+
+  const hook = clamp(
+    42 +
+    (flags.hasCuriosity ? 18 : 0) +
+    (flags.hasPain ? 14 : 0) +
+    (flags.hasNumber ? 8 : 0) +
+    (firstSentence.includes('you') ? 6 : 0) -
+    (flags.isGeneric ? 18 : 0) -
+    (firstSentence.length > 120 ? 8 : 0),
+  );
+
+  const specificity = clamp(
+    38 +
+    Math.min(wordCount, 28) +
+    (flags.hasNumber ? 12 : 0) +
+    (flags.hasAudience ? 10 : 0) +
+    (flags.hasProof ? 14 : 0) -
+    (flags.isGeneric ? 20 : 0),
+  );
+
+  const pacing = clamp(
+    52 +
+    (wordCount >= 12 && wordCount <= 36 ? 16 : 0) +
+    (flags.hasProof ? 8 : 0) +
+    (flags.hasPain ? 6 : 0) -
+    (flags.isTooLong ? 14 : 0) -
+    (wordCount < 7 ? 12 : 0),
+  );
+
+  const cta = clamp(44 + (flags.hasCta ? 30 : 0) + (flags.hasProof ? 8 : 0) - (flags.isGeneric ? 10 : 0));
+  const caption = clamp(48 + (flags.hasAudience ? 10 : 0) + (flags.hasPain ? 8 : 0) + (flags.hasNumber ? 8 : 0) + (wordCount > 18 ? 7 : 0));
+  const loop = clamp(46 + (flags.hasCuriosity ? 14 : 0) + (flags.hasProof ? 10 : 0) + (flags.hasCta ? 7 : 0) - (flags.isTooLong ? 8 : 0));
+  const aiRisk = clamp(68 - specificity / 3 - (flags.hasAudience ? 8 : 0) + (/ai/i.test(text) ? 8 : 0) + (flags.isGeneric ? 14 : 0));
+  const retention = clamp(Math.round(hook * 0.36 + pacing * 0.34 + loop * 0.2 + cta * 0.1 - (flags.isGeneric ? 8 : 0)));
+  const discovery = clamp(Math.round(platformFit * 0.45 + hook * 0.35 + specificity * 0.2));
+
+  const score = clamp(Math.round(
+    hook * 0.24 +
+    retention * 0.24 +
+    specificity * 0.14 +
+    caption * 0.12 +
+    cta * 0.1 +
+    discovery * 0.1 +
+    pacing * 0.08 -
+    aiRisk * 0.06,
+  ));
+
+  const signalValues = [
+    ['hook clarity', hook],
+    ['specific proof', specificity],
+    ['retention shape', retention],
+    ['platform fit', discovery],
+    ['CTA timing', cta],
+  ].sort((a, b) => b[1] - a[1]);
+
+  const risks = [
+    ['generic opening', flags.isGeneric ? 90 : 20],
+    ['missing CTA', flags.hasCta ? 22 : 78],
+    ['thin proof', flags.hasProof ? 25 : 74],
+    ['AI sameness', aiRisk],
+    ['overlong setup', flags.isTooLong ? 72 : 26],
+  ].sort((a, b) => b[1] - a[1]);
+
+  return {
+    score,
+    flags,
+    topSignals: signalValues.slice(0, 2).map(([label]) => label),
+    mainRisk: risks[0][0],
+    scores: {
+      hook,
+      retention,
+      pacing,
+      cta,
+      aiRisk,
+      discovery,
+      caption,
+      loop,
+    },
+  };
+}
+
+function clamp(value) {
+  return Math.max(0, Math.min(100, Math.round(value)));
 }
 
 createRoot(document.getElementById('root')).render(<App />);

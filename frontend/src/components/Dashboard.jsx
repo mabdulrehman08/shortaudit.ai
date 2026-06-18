@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { motion } from 'framer-motion'
 import { AlertTriangle, BarChart3, Bot, FileVideo, Gauge, Layers, Loader2, UploadCloud, Wand2, Zap } from 'lucide-react'
 import { analyzeVideo } from '../lib/api.js'
 import { Card, FieldLabel, Pill, ScoreBar } from './ui.jsx'

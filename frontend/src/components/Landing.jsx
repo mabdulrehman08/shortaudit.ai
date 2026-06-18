@@ -1,6 +1,9 @@
+import { createElement } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowRight, BarChart3, Sparkles, Zap } from 'lucide-react'
 import { Pill } from './ui.jsx'
+
+const MotionDiv = motion.div
 
 export default function Landing() {
   return (
@@ -18,7 +21,7 @@ export default function Landing() {
       </div>
 
       <div className="mx-auto grid max-w-7xl gap-12 py-20 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-        <motion.div initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
+        <MotionDiv initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
           <div className="mb-6 flex flex-wrap gap-3">
             <Pill>AI distribution analyst</Pill>
             <Pill tone="purple">TikTok · Reels · Shorts</Pill>
@@ -37,9 +40,9 @@ export default function Landing() {
               Rewrite hooks
             </a>
           </div>
-        </motion.div>
+        </MotionDiv>
 
-        <motion.div initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.7, delay: 0.15 }} className="glass gradient-border rounded-[2rem] p-5 shadow-card">
+        <MotionDiv initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.7, delay: 0.15 }} className="glass gradient-border rounded-[2rem] p-5 shadow-card">
           <div className="rounded-[1.5rem] border border-white/10 bg-slate-950/80 p-5">
             <div className="mb-8 flex items-center justify-between">
               <div>
@@ -57,7 +60,7 @@ export default function Landing() {
               ].map(([label, value, Icon, gradient]) => (
                 <div key={label} className="rounded-3xl border border-white/10 bg-white/[0.04] p-5">
                   <div className={`mb-5 flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br ${gradient} text-slate-950`}>
-                    <Icon size={19} />
+                    {createElement(Icon, { size: 19 })}
                   </div>
                   <p className="text-sm text-slate-400">{label}</p>
                   <p className="mt-1 text-2xl font-black text-white">{value}</p>
@@ -65,7 +68,7 @@ export default function Landing() {
               ))}
             </div>
           </div>
-        </motion.div>
+        </MotionDiv>
       </div>
     </section>
   )
